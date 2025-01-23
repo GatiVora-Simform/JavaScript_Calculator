@@ -4,12 +4,33 @@ const display = document.getElementById('calc-display');
 // Variables to store memory values (like M+, M-, MS)
 let memory = 0;
 
+let resultDisplayed = false;
+
+let openParenthesesCount = 0;
+
 function handleButtonClick(value) {
    const currentDisplay = display.value;
 
 
+   if (resultDisplayed && !isNaN(value)) {
+      display.value = value;
+      resultDisplayed = false; // Reset the flag
+      return;
+   }
+
+
+   const operators = ['+', '-', '*', '/', '%', '^', '÷'];
+   if (operators.includes(value)) {
+      // If last value is also an operator, replace it
+      if (operators.includes(currentDisplay.slice(-1))) {
+         display.value = currentDisplay.slice(0, -1) + value;
+         return;
+      }
+   }
+
    if (value === 'C') {
       display.value = '';
+      resultDisplayed = false; // Reset the flag
       return;
    }
 
@@ -19,6 +40,7 @@ function handleButtonClick(value) {
       } else {
          display.value = currentDisplay.slice(0, -1); // Remove last character otherwise
       }
+      resultDisplayed = false; // Reset the flag
       return;
    }
 
@@ -59,8 +81,18 @@ function handleButtonClick(value) {
       return;
    }
 
+
+   if (value === '(') {
+      openParenthesesCount++;
+      display.value += value;
+      return;
+   }
+
    if (value === ')') {
-      display.value += ')';
+      if (openParenthesesCount > 0) {
+         openParenthesesCount--;
+         display.value += value;
+      }
       return;
    }
 
@@ -118,9 +150,39 @@ function handleButtonClick(value) {
       return;
    }
 
+   if (value === '.') {
+
+      if (currentDisplay.includes('.')) {
+         return;
+      }
+   }
+
    display.value += value;
 }
 
+function isFloatingPoint(num) {
+   return !Number.isInteger(num);
+}
+
+
+// Helper function to check if parentheses are balanced
+function areParenthesesBalanced(expression) {
+   let stack = [];
+
+   for (let char of expression) {
+      if (char === '(') {
+         stack.push('(');
+      } else if (char === ')') {
+         if (stack.length === 0) {
+            return false; // More closing parentheses than opening ones
+         }
+         stack.pop();
+      }
+   }
+
+   // If there are any unmatched opening parentheses, return false
+   return stack.length === 0;
+}
 
 function calculateResult() {
    try {
@@ -133,12 +195,30 @@ function calculateResult() {
       expression = expression.replace(/e/g, Math.E);
       expression = expression.replace(/log\(/g, 'Math.log10(');
 
+      if (expression.includes('/0')) {
+         alert("Can't divide by zero!");
+         display.value = '';
+         return;
+      }
+
+      // First, validate parentheses balance
+      if (!areParenthesesBalanced(expression)) {
+         alert("Error: Unmatched parentheses")
+         display.value = '';
+         return;
+      }
 
       let result = eval(expression);
 
-      // If the result is a valid number, format it to 4 decimal places
+
+
+
       if (!isNaN(result)) {
-         display.value = result.toFixed(4);
+         if (isFloatingPoint(result.value)) {
+            display.value = result.toFixed(2);
+         }
+         display.value = result;
+
       } else {
          display.value = 'Error';
       }
@@ -161,17 +241,32 @@ function factorial(n) {
 // Keyboard input handling
 document.addEventListener('keydown', function (event) {
    const key = event.key;
-   if (key >= '0' && key <= '9') {
-      handleButtonClick(key);
-   } else if (key === '+' || key === '-' || key === '*' || key === '/') {
-      handleButtonClick(key);
-   } else if (key === 'Enter') {
-      calculateResult();
-   } else if (key === 'Backspace') {
-      handleButtonClick('⌫');
-   } else if (key === '.') {
-      handleButtonClick('.');
+
+   // Allow only numeric keys, operators, and some special keys
+   const validKeys = [
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+      '+', '-', '*', '/',
+      '.',
+      '(', ')',
+      'Enter', 'Backspace'
+   ];
+
+   if (validKeys.includes(key)) {
+      if (key >= '0' && key <= '9') {
+         handleButtonClick(key);
+      } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+         handleButtonClick(key);
+      } else if (key === 'Enter') {
+         calculateResult();
+      } else if (key === 'Backspace') {
+         handleButtonClick('⌫');
+      } else if (key === '.') {
+         handleButtonClick('.');
+      }
+   } else {
+      event.preventDefault();
    }
+
 });
 
 // Add the ability to click buttons with mouse
@@ -181,8 +276,10 @@ buttons.forEach(button => {
       const value = button.innerText;
       if (value === '=') {
          calculateResult();
+         resultDisplayed = true;
       } else {
          handleButtonClick(value);
+         resultDisplayed = false;
       }
    });
 });
