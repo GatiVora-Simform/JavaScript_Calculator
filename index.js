@@ -30,17 +30,17 @@ function handleButtonClick(value) {
 
    if (value === 'C') {
       display.value = '';
-      resultDisplayed = false; // Reset the flag
+      resultDisplayed = false;
       return;
    }
 
    if (value === '⌫') {
       if (display.value === 'Error') {
-         display.value = ''; // Clear input if error message is displayed
+         display.value = '';
       } else {
-         display.value = currentDisplay.slice(0, -1); // Remove last character otherwise
+         display.value = currentDisplay.slice(0, -1);
       }
-      resultDisplayed = false; // Reset the flag
+      resultDisplayed = false;
       return;
    }
 
@@ -83,6 +83,9 @@ function handleButtonClick(value) {
 
 
    if (value === '(') {
+      if (currentDisplay && /[\d\)]$/.test(currentDisplay)) {
+         display.value += ' * ';
+      }
       openParenthesesCount++;
       display.value += value;
       return;
@@ -96,17 +99,8 @@ function handleButtonClick(value) {
       return;
    }
 
-   // if (value === 'π') {
-   //    if(display.value != '' && !operators.includes(currentDisplay.slice(0, -1))){
-   //       display.value += ' * ';
-   //    }
-   //    // display.value += '*';
-   //    display.value += 'π';
-   //    return;
-   // }
 
    if (value === 'π') {
-      // Check if the current display ends with a number or closing parenthesis, add multiplication
       if (currentDisplay && /[\d\)]$/.test(currentDisplay)) {
          display.value += ' * ';
       }
@@ -118,7 +112,6 @@ function handleButtonClick(value) {
    }
 
    if (value === 'e') {
-      // Check if the current display ends with a number or closing parenthesis, add multiplication
       if (currentDisplay && /[\d\)]$/.test(currentDisplay)) {
          display.value += ' * ';
       }
