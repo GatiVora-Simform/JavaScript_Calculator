@@ -96,12 +96,35 @@ function handleButtonClick(value) {
       return;
    }
 
+   // if (value === 'π') {
+   //    if(display.value != '' && !operators.includes(currentDisplay.slice(0, -1))){
+   //       display.value += ' * ';
+   //    }
+   //    // display.value += '*';
+   //    display.value += 'π';
+   //    return;
+   // }
+
    if (value === 'π') {
+      // Check if the current display ends with a number or closing parenthesis, add multiplication
+      if (currentDisplay && /[\d\)]$/.test(currentDisplay)) {
+         display.value += ' * ';
+      }
+      if (currentDisplay.endsWith('π')) {
+         display.value += ' * ';
+      }
       display.value += 'π';
       return;
    }
 
    if (value === 'e') {
+      // Check if the current display ends with a number or closing parenthesis, add multiplication
+      if (currentDisplay && /[\d\)]$/.test(currentDisplay)) {
+         display.value += ' * ';
+      }
+      if (currentDisplay.endsWith('e')) {
+         display.value += ' * ';
+      }
       display.value += 'e';
       return;
    }
