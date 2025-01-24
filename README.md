@@ -2,6 +2,11 @@
 A simple calculator build with Bootstrap 5 and Javascript.
 
 
+## Technologies Used
+- Bootstrap 5
+- JavaScript
+
+
 ## Deployment
 To see this project live follow below link:
 
