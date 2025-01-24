@@ -18,6 +18,13 @@ function handleButtonClick(value) {
       return;
    }
 
+   if (!isNaN(value)) {  // If the input is a number
+      if (currentDisplay.endsWith('π') || currentDisplay.endsWith('e')) {
+         display.value += ' * ';
+      }
+      display.value += value;
+      return;
+   }
 
    const operators = ['+', '-', '*', '/', '%', '^', '÷'];
    if (operators.includes(value)) {
@@ -63,9 +70,11 @@ function handleButtonClick(value) {
    }
 
    if (value === '√') {
-      display.value = Math.sqrt(parseFloat(currentDisplay)).toString();
+      display.value += '√('; // Display the square root symbol
+      openParenthesesCount++; // Track open parentheses
       return;
    }
+
 
 
    if (value === 'mod') {
@@ -77,7 +86,12 @@ function handleButtonClick(value) {
 
 
    if (value === 'log') {
+      openParenthesesCount++;
+      if (currentDisplay && /[\d\)]$/.test(currentDisplay)) {
+         display.value += ' * ';
+      }
       display.value += 'log(';
+
       return;
    }
 
@@ -121,6 +135,8 @@ function handleButtonClick(value) {
       display.value += 'e';
       return;
    }
+
+
 
    if (value === 'M+') {
       memory += parseFloat(currentDisplay);
@@ -167,11 +183,12 @@ function handleButtonClick(value) {
    }
 
    if (value === '.') {
-
-      if (currentDisplay.includes('.')) {
-         return;
+      let lastNumber = currentDisplay.split(/[\+\-\*\/\(\) ]/).pop(); // Get the last entered number
+      if (lastNumber.includes('.')) {
+         return; // Prevents multiple decimals in the same number
       }
    }
+
 
    display.value += value;
 }
@@ -207,9 +224,10 @@ function calculateResult() {
 
       expression = expression.replace(/\^/g, '**');
       expression = expression.replace(/mod/g, '%');
-      expression = expression.replace(/π/g, Math.PI);
-      expression = expression.replace(/e/g, Math.E);
+      expression = expression.replace(/π/g, Math.PI.toFixed(2));
+      expression = expression.replace(/e/g, Math.E.toFixed(2));
       expression = expression.replace(/log\(/g, 'Math.log10(');
+      expression = expression.replace(/√\(/g, 'Math.sqrt(');
 
       if (expression.includes('/0')) {
          alert("Can't divide by zero!");
