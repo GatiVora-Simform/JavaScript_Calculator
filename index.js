@@ -213,6 +213,7 @@ function handleButtonClick(value) {
       if (lastNumber.includes(".")) {
          return;
       }
+      display.value+=".";
    }
 
    //if last key was equals then if we press number it should clear prev
