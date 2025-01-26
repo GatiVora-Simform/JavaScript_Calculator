@@ -63,6 +63,9 @@ function handleButtonClick(value) {
    }
 
    if (value === "√") {
+      if (currentDisplay && /[\d\)]$/.test(currentDisplay)) {
+         display.value += " * ";
+      }
       display.value += "√(";
       openParenthesesCount++;
       return;
