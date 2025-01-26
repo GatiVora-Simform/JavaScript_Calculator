@@ -12,6 +12,15 @@ function handleButtonClick(value) {
 
    const currentDisplay = display.value;
 
+   const operators = ["+", "-", "*", "/", "%", "^"];
+
+   if (operators.includes(value)) {
+      //ovveride operator
+      if (operators.includes(currentDisplay.slice(-1))) {
+         display.value = currentDisplay.slice(0, -1) + value;
+         return;
+      }
+   }
 
    if (value === "C") {
       display.value = "";
@@ -54,7 +63,8 @@ function handleButtonClick(value) {
    }
 
    if (value === "√") {
-      display.value += "√";
+      display.value += "√(";
+      openParenthesesCount++;
       return;
    }
 
@@ -217,15 +227,7 @@ function handleButtonClick(value) {
       return;
    }
 
-   const operators = ["+", "-", "*", "/", "%", "^"];
 
-   if (operators.includes(value)) {
-      //ovveride operator
-      if (operators.includes(currentDisplay.slice(-1))) {
-         display.value = currentDisplay.slice(0, -1) + value;
-         return;
-      }
-   }
 }
 
 function areParenthesesBalanced(expression) {
