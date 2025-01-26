@@ -14,4 +14,4 @@ To see this project live follow below link:
   https://gativora-simform.github.io/JavaScript_Calculator/
 ```
 ## Screenshots
-![Image](https://github.com/user-attachments/assets/8bfb7fff-1bd5-4382-b995-03ff37c62665)
+![Image](https://github.com/user-attachments/assets/88fac6d1-2fe6-4358-b503-4a12cab69d34)
