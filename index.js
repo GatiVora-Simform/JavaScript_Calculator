@@ -12,6 +12,8 @@ function handleButtonClick(value) {
 
    const currentDisplay = display.value;
 
+   display.scrollLeft = display.scrollWidth;
+
    const operators = ["+", "-", "*", "/", "%", "^"];
 
    if (operators.includes(value)) {
