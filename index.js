@@ -301,7 +301,7 @@ function factorial(n) {
 
 //allow keyboard input
 document.addEventListener("keydown", function (event) {
-   event.preventDefault();
+
    display.focus();
 
    const key = event.key;
